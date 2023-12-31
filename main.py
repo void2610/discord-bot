@@ -27,6 +27,17 @@ async def on_ready():
     print("Ready!")
 
 
+@bot.event
+async def on_message(message: discord.Message):
+    if message.author.bot:
+        return
+
+    if "twitter.com" in message.content or "x.com" in message.content:
+        await message.add_reaction("🐦")
+        query = message.content.split(".com/")[-1]
+        await message.channel.send("https://vxtwitter.com/" + query)
+
+
 @bot.slash_command(guild_ids=gids)
 async def join(ctx):
     await join_to_authors_channel(ctx)
