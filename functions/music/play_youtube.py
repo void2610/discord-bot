@@ -6,9 +6,10 @@ import yt_dlp
 
 from functions.join import join_to_authors_channel
 
-async def play_youtube(ctx, url: str):
+async def add_youtube_to_queue(ctx, url: str, queue: list[str]):
     if ctx.voice_client is None:
         await join_to_authors_channel(ctx)
+    vc = ctx.voice_client
 
     filename = f"{uuid.uuid4()}.webm"
 
@@ -20,11 +21,17 @@ async def play_youtube(ctx, url: str):
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
-            os.rename("downloaded_audio.webm", f"music/{filename}")
-        player = discord.FFmpegPCMAudio("music/" + filename)
-        ctx.voice_client.play(player)
+            os.rename("downloaded_audio.webm", f"tmp/music/{filename}")
+
+        queue.append(filename)
+        print(queue)
+
+        if not vc.is_playing():
+            player = discord.FFmpegPCMAudio("tmp/music/" + filename)
+            vc.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+
     except Exception as e:
         await ctx.respond(f"Error: {e}")
         return
 
-    await ctx.respond("Playing!")
+    await ctx.respond(f"Added {filename} to queue!")
