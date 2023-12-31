@@ -13,6 +13,7 @@ discord-py = "^2.3.2"
 ffmpeg-python = "^0.2.0"
 python-dotenv = "^1.0.0"
 py-cord = {extras = ["voice"], version = "^2.4.1"}
+yt-dlp = "^2023.12.30"
 
 
 [build-system]
