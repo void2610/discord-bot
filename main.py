@@ -3,6 +3,7 @@ import os
 import discord
 from dotenv import load_dotenv
 
+import global_variables as g
 from functions.join import join_to_authors_channel
 from functions.leave import leave_from_voice_channel
 from functions.music.play_youtube import add_youtube_to_queue
@@ -14,8 +15,9 @@ load_dotenv()
 bot = discord.Bot(intents=discord.Intents.all(), activity=discord.Game("( 'ω')"),)
 gids = os.environ["GUILD_ID"].split(',')
 
-now_playing = None
-queue = []
+g.now_playing = None
+g.queue = []
+
 
 
 @bot.event
@@ -32,16 +34,18 @@ async def join(ctx):
 
 @bot.slash_command(guild_ids=gids)
 async def leave(ctx):
+    g.now_playing = None
+    g.queue = []
     await leave_from_voice_channel(ctx)
 
 
 @bot.slash_command(guild_ids=gids)
 async def play(ctx, url: str):
     if ctx.voice_client is None:
-        await join_to_authors_channel(ctx,)
+        await join_to_authors_channel(ctx)
 
-    await add_youtube_to_queue(ctx, url, queue)
-    await play_next_music(ctx, queue, now_playing)
+    await add_youtube_to_queue(ctx, url)
+    await play_next_music(ctx)
 
 
 @bot.slash_command(guild_ids=gids)

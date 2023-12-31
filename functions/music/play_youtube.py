@@ -3,10 +3,14 @@ import uuid
 
 import discord
 import yt_dlp
+from importlib import reload
 
+import global_variables as g
 from functions.join import join_to_authors_channel
+from functions.music.play import play_next_music
 
-async def add_youtube_to_queue(ctx, url: str, queue: list[str]):
+
+async def add_youtube_to_queue(ctx, url: str):
     if ctx.voice_client is None:
         await join_to_authors_channel(ctx)
     vc = ctx.voice_client
@@ -23,15 +27,13 @@ async def add_youtube_to_queue(ctx, url: str, queue: list[str]):
             ydl.download([url])
             os.rename("downloaded_audio.webm", f"tmp/music/{filename}")
 
-        queue.append(filename)
-        print(queue)
-
-        if not vc.is_playing():
-            player = discord.FFmpegPCMAudio("tmp/music/" + filename)
-            vc.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
-
+        g.queue.append(filename)
+        print(g.queue)
     except Exception as e:
         await ctx.respond(f"Error: {e}")
         return
 
     await ctx.respond(f"Added {filename} to queue!")
+
+    if not vc.is_playing():
+            await play_next_music(ctx)
