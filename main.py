@@ -1,4 +1,6 @@
 import os
+import sys
+import pprint
 
 import discord
 from dotenv import load_dotenv
@@ -8,13 +10,18 @@ from functions.leave import leave_from_voice_channel
 from functions.play_youtube import play_youtube
 
 
-load_dotenv()
-bot = discord.Bot(intents=discord.Intents.all(), activity=discord.Game("( 'ω')"),)
+pprint.pprint(sys.path)
 
+load_dotenv()
+
+bot = discord.Bot(intents=discord.Intents.all(), activity=discord.Game("( 'ω')"),)
 gids = [int(os.environ["GUILD_ID"])]
+
 
 @bot.event
 async def on_ready():
+    if not discord.opus.is_loaded():
+        discord.opus.load_opus(os.environ["OPUS_PATH"])
     print("Ready!")
 
 
@@ -39,6 +46,17 @@ async def play(ctx, url: str):
         await join_to_authors_channel(ctx)
 
     play_youtube(ctx, url)
+
+
+@bot.slash_command(guild_ids=gids)
+async def test(ctx):
+    if ctx.voice_client is None:
+        await join_to_authors_channel(ctx)
+    vc = ctx.voice_client
+
+    source = discord.FFmpegPCMAudio("resource/test.mp3")
+    vc.play(source)
+    await ctx.respond("Playing!")
 
 
 token = os.environ["TOKEN"] or ""
