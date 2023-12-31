@@ -4,6 +4,7 @@ import discord
 from dotenv import load_dotenv
 
 from functions.join import join_to_authors_channel
+from functions.leave import leave_from_voice_channel
 
 
 load_dotenv()
@@ -24,6 +25,10 @@ async def hello(ctx, name: str = None):
 @bot.slash_command()
 async def join(ctx):
     await join_to_authors_channel(ctx)
+
+@bot.slash_command()
+async def leave(ctx):
+    await leave_from_voice_channel(ctx)
 
 
 token = os.environ["TOKEN"] or ""
