@@ -16,3 +16,23 @@ async def play_next_music(ctx):
         await ctx.respond(f"Playing {g.now_playing}!")
     else:
         await ctx.respond("Queue is empty!")
+
+
+async def stop_playing_music(ctx):
+    vc = ctx.voice_client
+
+    if vc.is_playing():
+        vc.stop()
+        await ctx.respond("Stopped playing music!")
+    else:
+        await ctx.respond("Not playing music!")
+
+
+async def resume_playing_music(ctx):
+    vc = ctx.voice_client
+
+    if vc.is_paused():
+        vc.resume()
+        await ctx.respond("Resumed playing music!")
+    else:
+        await ctx.respond("Not paused!")
