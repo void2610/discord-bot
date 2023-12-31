@@ -40,12 +40,28 @@ async def leave(ctx):
 
 
 @bot.slash_command(guild_ids=gids)
+async def next(ctx):
+    await play_next_music(ctx)
+
+
+@bot.slash_command(guild_ids=gids)
+async def queue(ctx):
+    if len(g.queue) > 0:
+        await ctx.respond(f"Now playing: {g.now_playing}\nQueue: {g.queue}")
+    else:
+        await ctx.respond("Queue is empty!")
+
+
+@bot.slash_command(guild_ids=gids)
 async def play(ctx, url: str):
     if ctx.voice_client is None:
         await join_to_authors_channel(ctx)
 
     await add_youtube_to_queue(ctx, url)
-    await play_next_music(ctx)
+
+    if ctx.voice_client.is_playing():
+        await play_next_music(ctx)
+
 
 
 @bot.slash_command(guild_ids=gids)

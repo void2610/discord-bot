@@ -34,6 +34,3 @@ async def add_youtube_to_queue(ctx, url: str):
         return
 
     await ctx.respond(f"Added {filename} to queue!")
-
-    if not vc.is_playing():
-            await play_next_music(ctx)
