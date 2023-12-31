@@ -4,10 +4,11 @@ import discord
 from dotenv import load_dotenv
 
 import global_variables as g
+from classes.track import track
 from functions.join import join_to_authors_channel
 from functions.leave import leave_from_voice_channel
-from functions.music.play_youtube import add_youtube_to_queue
-from functions.music.play import play_next_music, stop_playing_music, resume_playing_music
+from functions.music.youtube import get_track_from_youtube
+from functions.music.play import play_next_track, stop_playing_track, resume_playing_track, pause_playing_track
 
 
 load_dotenv()
@@ -15,9 +16,8 @@ load_dotenv()
 bot = discord.Bot(intents=discord.Intents.all(), activity=discord.Game("( 'ω')"),)
 gids = os.environ["GUILD_ID"].split(',')
 
-g.now_playing = None
-g.queue = []
-
+g.now_playing: track = None
+g.queue: list[track] = []
 
 
 @bot.event
@@ -41,36 +41,45 @@ async def leave(ctx):
 
 @bot.slash_command(guild_ids=gids)
 async def next(ctx):
-    await play_next_music(ctx)
+    await play_next_track(ctx)
 
 
 @bot.slash_command(guild_ids=gids)
 async def stop(ctx):
-    await stop_playing_music(ctx)
+    await stop_playing_track(ctx)
 
 
 @bot.slash_command(guild_ids=gids)
 async def resume(ctx):
-    await resume_playing_music(ctx)
+    await resume_playing_track(ctx)
+
+
+@bot.slash_command(guild_ids=gids)
+async def pause(ctx):
+    await pause_playing_track(ctx)
 
 
 @bot.slash_command(guild_ids=gids)
 async def queue(ctx):
+    message = "Now playing:" + g.now_playing.title + "\nQueue:\n"
     if len(g.queue) > 0:
-        await ctx.respond(f"Now playing: {g.now_playing}\nQueue: {g.queue}")
-    else:
-        await ctx.respond("Queue is empty!")
+        for i, track in enumerate(g.queue):
+            message += f"{i + 1}: {track.title}"
+    await ctx.respond(message)
 
 
 @bot.slash_command(guild_ids=gids)
 async def play(ctx, url: str):
+    await ctx.response.defer()
     if ctx.voice_client is None:
         await join_to_authors_channel(ctx)
 
-    await add_youtube_to_queue(ctx, url)
+    new_track = await get_track_from_youtube(url)
+    g.queue.append(new_track)
+    await ctx.respond(f"Queued {new_track.title}!")
 
     if not ctx.voice_client.is_playing():
-        await play_next_music(ctx)
+        await play_next_track(ctx)
 
 
 @bot.slash_command(guild_ids=gids)
