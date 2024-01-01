@@ -5,10 +5,12 @@ from dotenv import load_dotenv
 
 import global_variables as g
 from classes.track import track
+from classes.embed_view import embed_view
 from functions.join import join_to_authors_channel
 from functions.leave import leave_from_voice_channel
 from functions.music.youtube import get_track_from_youtube
 from functions.music.play import play_next_track, stop_playing_track, resume_playing_track, pause_playing_track
+from embeds.track import track_embed
 
 
 load_dotenv()
@@ -51,6 +53,17 @@ async def leave(ctx):
 
 
 @bot.slash_command(guild_ids=gids)
+async def now(ctx):
+    if g.now_playing is None:
+        embed = discord.Embed(title="Oops!",description="Now playing is None!",color=discord.Colour.red())
+        await ctx.respond(embed=embed)
+        return
+
+    ec = track_embed(g.now_playing)
+    await ctx.respond(embed=ec.embed, components=ec.components)
+
+
+@bot.slash_command(guild_ids=gids)
 async def next(ctx):
     await play_next_track(ctx)
 
@@ -72,6 +85,11 @@ async def pause(ctx):
 
 @bot.slash_command(guild_ids=gids)
 async def queue(ctx):
+    if g.now_playing is None:
+        embed = discord.Embed(title="Oops!",description="Queue is empty!",color=discord.Colour.red())
+        await ctx.respond(embed=embed)
+        return
+
     message = "Now playing:" + g.now_playing.title + "\nQueue:\n"
     if len(g.queue) > 0:
         for i, track in enumerate(g.queue):

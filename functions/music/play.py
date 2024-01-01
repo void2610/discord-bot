@@ -1,6 +1,9 @@
 import discord
 
 import global_variables as g
+from classes.track import track
+from classes.embed_view import embed_view
+from embeds.track import track_embed
 
 async def play_next_track(ctx):
     vc = ctx.voice_client
@@ -13,7 +16,8 @@ async def play_next_track(ctx):
         player = discord.FFmpegPCMAudio("tmp/music/" + g.now_playing.filename)
         vc.play(player)
 
-        await ctx.respond(f"Playing {g.now_playing.title} \n" + g.now_playing.url)
+        ev = track_embed(g.now_playing)
+        await ctx.respond(embed=ev.embed, view=ev.view)
     else:
         await ctx.respond("Queue is empty!")
 

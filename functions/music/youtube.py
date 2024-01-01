@@ -25,7 +25,7 @@ async def get_track_from_youtube(url: str) -> track:
             ydl.download([url])
             os.rename("downloaded_audio.webm", f"tmp/music/{filename}")
 
-        print(f"Downloaded {new_track.title}!")
+        print(f"Downloaded {new_track.title}")
         return new_track
     except Exception as e:
         return None
