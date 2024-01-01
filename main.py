@@ -11,6 +11,8 @@ from functions.leave import leave_from_voice_channel
 from functions.music.youtube import get_track_from_youtube
 from functions.music.play import play_next_track, stop_playing_track, resume_playing_track, pause_playing_track
 from embeds.track import track_embed
+from embeds.utils import oops_embed
+from embeds.queue import queued_tracks_embed
 
 
 load_dotenv()
@@ -55,8 +57,7 @@ async def leave(ctx):
 @bot.slash_command(guild_ids=gids)
 async def now(ctx):
     if g.now_playing is None:
-        embed = discord.Embed(title="Oops!",description="Now playing is None!",color=discord.Colour.red())
-        await ctx.respond(embed=embed)
+        await ctx.respond(embed=oops_embed("Now playing is None!"))
         return
 
     ec = track_embed(g.now_playing)
@@ -86,8 +87,7 @@ async def pause(ctx):
 @bot.slash_command(guild_ids=gids)
 async def queue(ctx):
     if g.now_playing is None:
-        embed = discord.Embed(title="Oops!",description="Queue is empty!",color=discord.Colour.red())
-        await ctx.respond(embed=embed)
+        await ctx.respond(embed=oops_embed("Queue is empty!"))
         return
 
     message = "Now playing:" + g.now_playing.title + "\nQueue:\n"
@@ -105,7 +105,7 @@ async def play(ctx, url: str):
 
     new_track = await get_track_from_youtube(url)
     g.queue.append(new_track)
-    await ctx.respond(f"Queued {new_track.title}!")
+    await ctx.respond(embed=queued_tracks_embed(new_track))
 
     if not ctx.voice_client.is_playing():
         await play_next_track(ctx)

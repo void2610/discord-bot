@@ -4,6 +4,7 @@ import global_variables as g
 from classes.track import track
 from classes.embed_view import embed_view
 from embeds.track import track_embed
+from embeds.utils import oops_embed
 
 async def play_next_track(ctx):
     vc = ctx.voice_client
@@ -19,7 +20,7 @@ async def play_next_track(ctx):
         ev = track_embed(g.now_playing)
         await ctx.respond(embed=ev.embed, view=ev.view)
     else:
-        await ctx.respond("Queue is empty!")
+        await ctx.respond(embed=oops_embed("Queue is empty!"))
 
 
 async def stop_playing_track(ctx):
@@ -29,7 +30,7 @@ async def stop_playing_track(ctx):
         vc.stop()
         await ctx.respond("Stopped playing music!")
     else:
-        await ctx.respond("Not playing music!")
+        await ctx.respond(embed=oops_embed("Not playing music!"))
 
 
 async def pause_playing_track(ctx):
@@ -39,7 +40,7 @@ async def pause_playing_track(ctx):
         vc.pause()
         await ctx.respond("Paused playing music!")
     else:
-        await ctx.respond("Not playing music!")
+        await ctx.respond(embed=oops_embed("Not playing music!"))
 
 
 async def resume_playing_track(ctx):
@@ -49,4 +50,4 @@ async def resume_playing_track(ctx):
         vc.resume()
         await ctx.respond("Resumed playing music!")
     else:
-        await ctx.respond("Not paused!")
+        await ctx.respond(embed=oops_embed("Not paused!"))
