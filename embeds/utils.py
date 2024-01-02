@@ -8,7 +8,7 @@ def success_embed(description: str) -> Embed:
     embed = Embed(
         title="Success!",
         description=description,
-        color=discord.Colour.green()
+        color=0x6fff00,
     )
 
     return embed
