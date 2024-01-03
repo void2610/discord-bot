@@ -3,6 +3,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+from cogwatch import Watcher
 
 from functions.join import join_to_authors_channel
 
@@ -18,6 +19,8 @@ class util_cog(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
+        watcher = Watcher(self.bot, path='cogs/util.py', preload=True, debug=False)
+        await watcher.start()
         print("Util ready!")
 
 
