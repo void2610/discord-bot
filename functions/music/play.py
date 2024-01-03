@@ -1,6 +1,5 @@
 import discord
 
-import global_variables as g
 from classes.track import track
 from classes.embed_view import embed_view
 from embeds.track import track_embed

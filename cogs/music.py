@@ -4,7 +4,6 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
-import global_variables as g
 from classes.track import track
 from classes.embed_view import embed_view
 from functions.join import join_to_authors_channel
@@ -38,8 +37,8 @@ class music_cog(commands.Cog):
 
     @commands.slash_command(guild_ids=gids)
     async def leave(self, ctx):
-        g.now_playing = None
-        g.queue = []
+        self.now_playing = None
+        self.queue = []
         await leave_from_voice_channel(ctx)
 
 
@@ -87,7 +86,8 @@ class music_cog(commands.Cog):
 
         new_track = await get_track_from_youtube(url)
         self.queue.append(new_track)
-        await ctx.respond(embed=queued_tracks_embed(new_track))
+        if len(self.queue) != 1:
+            await ctx.respond(embed=queued_tracks_embed(new_track))
 
         if not ctx.voice_client.is_playing():
             self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)

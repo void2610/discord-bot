@@ -1,28 +1,37 @@
 import os
 
 import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
-import global_variables as g
-from classes.track import track
-from classes.embed_view import embed_view
-from functions.join import join_to_authors_channel
-from functions.leave import leave_from_voice_channel
-from functions.music.youtube import get_track_from_youtube
-from functions.music.play import play_next_track, stop_playing_track, resume_playing_track, pause_playing_track
-from embeds.track import track_embed
-from embeds.utils import oops_embed
-from embeds.queue import queued_tracks_embed
+from cogs.util import util_cog
+from cogs.music import music_cog
+
+
+class MyBot(commands.Bot):
+    def __init__(self):
+        super().__init__(
+            command_prefix="!",
+            intents=discord.Intents.all()
+        )
+
+    async def setup_hook(self) -> None:
+        guild_ids = os.environ["GUILD_ID"].split(',')
+        await self.tree.sync(guild=None)
+        for g in guild_ids:
+            try:
+                await self.tree.sync(guild=g)
+            except discord.errors.Forbidden:
+                print(f"Guild {g} is not found.")
 
 
 load_dotenv()
+for filename in os.listdir("tmp/music"):
+    os.remove(f"tmp/music/{filename}")
 
-bot = discord.Bot(intents=discord.Intents.all(), activity=discord.Game("( 'ω')"),)
-gids = os.environ["GUILD_ID"].split(',')
+bot = MyBot()
 
-g.now_playing: track = None
-g.queue: list[track] = []
+bot.add_cog(util_cog(bot))
+bot.add_cog(music_cog(bot))
 
-
-token = os.environ["TOKEN"] or ""
-bot.run(token)
+bot.run(os.environ["TOKEN"] or "")
