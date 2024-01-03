@@ -13,7 +13,7 @@ from functions.music.youtube import get_track_from_youtube
 from functions.music.play import play_next_track, stop_playing_track, resume_playing_track, pause_playing_track
 from embeds.track import track_embed
 from embeds.utils import oops_embed
-from embeds.queue import queued_tracks_embed
+from embeds.queue import queued_tracks_embed, queue_embed
 
 
 load_dotenv()
@@ -75,15 +75,8 @@ class music_cog(commands.Cog):
 
     @commands.slash_command(guild_ids=gids)
     async def queue(self, ctx):
-        if self.now_playing is None:
-            await ctx.respond(embed=oops_embed("Queue is empty!"))
-            return
-
-        message = "Now playing:" + self.now_playing.title + "\nQueue:\n"
-        if len(self.queue) > 0:
-            for i, track in enumerate(self.queue):
-                message += f"{i + 1}: {track.title} \n"
-        await ctx.respond(message)
+        e = queue_embed(self.queue, self.now_playing)
+        await ctx.respond(embed=e)
 
 
     @commands.slash_command(guild_ids=gids)
