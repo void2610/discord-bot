@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from functions.join import join_to_authors_channel
 
+
 load_dotenv()
 gids = os.environ["GUILD_ID"].split(',')
 
@@ -13,6 +14,7 @@ class util_cog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
+
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -58,3 +60,6 @@ class util_cog(commands.Cog):
         for i in range(num):
             await ctx.respond("あけおめ ( 'ω')")
 
+
+def setup(bot):
+    bot.add_cog(util_cog(bot))

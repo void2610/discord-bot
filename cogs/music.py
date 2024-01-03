@@ -101,3 +101,7 @@ class music_cog(commands.Cog):
         new_track = await get_track_from_youtube(url)
         self.queue.append(new_track)
         await ctx.respond(embed=queued_tracks_embed(new_track))
+
+
+def setup(bot):
+    bot.add_cog(music_cog(bot))
