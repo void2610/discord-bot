@@ -6,7 +6,7 @@ from classes.embed_view import embed_view
 from embeds.track import track_embed
 from embeds.utils import oops_embed
 
-async def play_next_track(ctx, queue: list[track], now_playing: track):
+async def play_next_track(ctx, queue: list[track], now_playing: track) -> track:
     vc = ctx.voice_client
 
     if len(queue) > 0:
@@ -18,9 +18,12 @@ async def play_next_track(ctx, queue: list[track], now_playing: track):
         vc.play(player)
 
         ev = track_embed(now_playing)
+        print(now_playing)
         await ctx.respond(embed=ev.embed)
     else:
         await ctx.respond(embed=oops_embed("Queue is empty!"))
+
+    return now_playing
 
 
 async def stop_playing_track(ctx, now_playing: track):

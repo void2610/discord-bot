@@ -9,6 +9,7 @@ def queued_tracks_embed(track) -> Embed:
         url=track.url
     )
     embed.add_field(name=track.title, value=track.uploader, inline=False)
+    embed.set_thumbnail(url=track.thumbnail_url)
 
     return embed
 

@@ -26,10 +26,12 @@ class MyBot(commands.Bot):
 
 
 load_dotenv()
-token = os.environ["TOKEN"] or ""
+for filename in os.listdir("tmp/music"):
+    os.remove(f"tmp/music/{filename}")
+
 bot = MyBot()
 
 bot.add_cog(util_cog(bot))
 bot.add_cog(music_cog(bot))
 
-bot.run(token)
+bot.run(os.environ["TOKEN"] or "")

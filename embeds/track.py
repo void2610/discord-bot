@@ -21,7 +21,7 @@ def track_embed(track) -> embed_view:
         color=0x6fff00,
         url= track.url
     )
-    embed.set_image(url= track.thumbnail_url)
+    embed.set_thumbnail(url= track.thumbnail_url)
     embed.add_field(name= track.title, value=track.uploader, inline=False)
 
     return embed_view(embed=embed)

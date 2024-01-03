@@ -70,7 +70,7 @@ class music_cog(commands.Cog):
             return
 
         ec = track_embed(self.now_playing)
-        await ctx.respond(embed=ec.embed, components=ec.components)
+        await ctx.respond(embed=ec.embed)
 
 
     @commands.slash_command(guild_ids=gids)
@@ -88,12 +88,16 @@ class music_cog(commands.Cog):
         new_track = await get_track_from_youtube(url)
         self.queue.append(new_track)
         await ctx.respond(embed=queued_tracks_embed(new_track))
-        print(self.queue)
 
         if not ctx.voice_client.is_playing():
-            await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
+            self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
             print(self.now_playing)
 
 
+    @commands.slash_command(guild_ids=gids)
+    async def add(self, ctx, url: str):
+        await ctx.response.defer()
 
-
+        new_track = await get_track_from_youtube(url)
+        self.queue.append(new_track)
+        await ctx.respond(embed=queued_tracks_embed(new_track))
