@@ -6,28 +6,29 @@ from classes.embed_view import embed_view
 from embeds.track import track_embed
 from embeds.utils import oops_embed
 
-async def play_next_track(ctx):
+async def play_next_track(ctx, queue: list[track], now_playing: track):
     vc = ctx.voice_client
 
-    if len(g.queue) > 0:
+    if len(queue) > 0:
         if vc.is_playing():
             vc.stop()
-        g.now_playing = g.queue.pop(0)
+        now_playing = queue.pop(0)
 
-        player = discord.FFmpegPCMAudio("tmp/music/" + g.now_playing.filename)
+        player = discord.FFmpegPCMAudio("tmp/music/" + now_playing.filename)
         vc.play(player)
 
-        ev = track_embed(g.now_playing)
-        await ctx.respond(embed=ev.embed, view=ev.view)
+        ev = track_embed(now_playing)
+        await ctx.respond(embed=ev.embed)
     else:
         await ctx.respond(embed=oops_embed("Queue is empty!"))
 
 
-async def stop_playing_track(ctx):
+async def stop_playing_track(ctx, now_playing: track):
     vc = ctx.voice_client
 
     if vc.is_playing():
         vc.stop()
+        now_playing = None
         await ctx.respond("Stopped playing music!")
     else:
         await ctx.respond(embed=oops_embed("Not playing music!"))
