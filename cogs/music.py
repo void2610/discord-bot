@@ -52,7 +52,7 @@ class music_cog(commands.Cog):
 
     @commands.slash_command(guild_ids=gids)
     async def stop(self, ctx):
-        await stop_playing_track(ctx, now_playing=self.now_playing)
+        await stop_playing_track(ctx)
 
 
     @commands.slash_command(guild_ids=gids)

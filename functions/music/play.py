@@ -4,7 +4,7 @@ import discord
 from classes.track import track
 from classes.embed_view import embed_view
 from embeds.track import track_embed
-from embeds.utils import oops_embed
+from embeds.utils import oops_embed, success_embed
 
 async def play_next_track(ctx, bot, queue: list[track], now_playing: track) -> track:
     vc = ctx.voice_client
@@ -30,7 +30,7 @@ async def stop_playing_track(ctx):
 
     if vc.is_playing():
         vc.stop()
-        await ctx.respond("Stopped playing music!")
+        await ctx.respond(embed=success_embed("Stopped playing music!"))
     else:
         await ctx.respond(embed=oops_embed("Not playing music!"))
 
@@ -40,7 +40,7 @@ async def pause_playing_track(ctx):
 
     if vc.is_playing():
         vc.pause()
-        await ctx.respond("Paused playing music!")
+        await ctx.respond(embed=success_embed("Paused playing music!"))
     else:
         await ctx.respond(embed=oops_embed("Not playing music!"))
 
@@ -50,6 +50,6 @@ async def resume_playing_track(ctx):
 
     if vc.is_paused():
         vc.resume()
-        await ctx.respond("Resumed playing music!")
+        await ctx.respond(embed=success_embed("Resumed playing music!"))
     else:
         await ctx.respond(embed=oops_embed("Not paused!"))
