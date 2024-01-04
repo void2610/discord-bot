@@ -1,3 +1,4 @@
+import asyncio
 import discord
 
 from classes.track import track
@@ -5,7 +6,7 @@ from classes.embed_view import embed_view
 from embeds.track import track_embed
 from embeds.utils import oops_embed
 
-async def play_next_track(ctx, queue: list[track], now_playing: track) -> track:
+async def play_next_track(ctx, bot, queue: list[track], now_playing: track) -> track:
     vc = ctx.voice_client
 
     if len(queue) > 0:
@@ -14,7 +15,7 @@ async def play_next_track(ctx, queue: list[track], now_playing: track) -> track:
         now_playing = queue.pop(0)
 
         player = discord.FFmpegPCMAudio("tmp/music/" + now_playing.filename)
-        vc.play(player)
+        vc.play(player, after=lambda e: asyncio.run_coroutine_threadsafe(play_next_track(ctx, bot, queue, now_playing), bot.loop).result())
 
         ev = track_embed(now_playing)
         await ctx.respond(embed=ev.embed)
@@ -24,12 +25,11 @@ async def play_next_track(ctx, queue: list[track], now_playing: track) -> track:
     return now_playing
 
 
-async def stop_playing_track(ctx, now_playing: track):
+async def stop_playing_track(ctx):
     vc = ctx.voice_client
 
     if vc.is_playing():
         vc.stop()
-        now_playing = None
         await ctx.respond("Stopped playing music!")
     else:
         await ctx.respond(embed=oops_embed("Not playing music!"))

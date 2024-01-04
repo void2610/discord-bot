@@ -93,7 +93,7 @@ class music_cog(commands.Cog):
             await ctx.respond(embed=queued_tracks_embed(new_track))
 
         if not ctx.voice_client.is_playing():
-            self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
+            self.now_playing = await play_next_track(ctx, self.bot, queue=self.queue, now_playing=self.now_playing)
 
 
     @commands.slash_command(guild_ids=gids)
