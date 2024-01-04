@@ -47,7 +47,7 @@ class music_cog(commands.Cog):
 
     @commands.slash_command(guild_ids=gids)
     async def next(self, ctx):
-        await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
+        self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
 
 
     @commands.slash_command(guild_ids=gids)
@@ -94,7 +94,6 @@ class music_cog(commands.Cog):
 
         if not ctx.voice_client.is_playing():
             self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
-            print(self.now_playing)
 
 
     @commands.slash_command(guild_ids=gids)

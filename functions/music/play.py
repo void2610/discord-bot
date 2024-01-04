@@ -17,7 +17,6 @@ async def play_next_track(ctx, queue: list[track], now_playing: track) -> track:
         vc.play(player)
 
         ev = track_embed(now_playing)
-        print(now_playing)
         await ctx.respond(embed=ev.embed)
     else:
         await ctx.respond(embed=oops_embed("Queue is empty!"))
