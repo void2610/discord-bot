@@ -1,3 +1,4 @@
+import random
 import os
 
 import discord
@@ -6,6 +7,7 @@ from dotenv import load_dotenv
 from cogwatch import Watcher
 
 from functions.join import join_to_authors_channel
+from resource.meigen import meigen
 
 
 load_dotenv()
@@ -61,6 +63,21 @@ class util_cog(commands.Cog):
     async def akeome(self, ctx, num: int):
         for i in range(num):
             await ctx.respond("あけおめ ( 'ω')")
+
+    @commands.slash_command(guild_ids=gids)
+    async def budo(self, ctx):
+        if ctx.voice_client is None:
+            await join_to_authors_channel(ctx)
+
+        await ctx.respond("🍇")
+        source = discord.FFmpegPCMAudio("resource/lovehotel_BUDO.mp3")
+        ctx.voice_client.stop()
+        ctx.voice_client.play(source)
+
+
+    @commands.slash_command(guild_ids=gids)
+    async def meigen(self, ctx):
+        await ctx.respond(random.choice(meigen))
 
 
 def setup(bot):
