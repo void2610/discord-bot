@@ -32,7 +32,6 @@ class music_cog(commands.Cog):
 
         watcher = Watcher(self.bot, path='cogs/music.py', preload=True, debug=False)
         await watcher.start()
-        print("Music ready!")
 
     @commands.slash_command(guild_ids=gids)
     async def join(self, ctx):

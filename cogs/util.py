@@ -21,7 +21,6 @@ class util_cog(commands.Cog):
     async def on_ready(self):
         watcher = Watcher(self.bot, path='cogs/util.py', preload=True, debug=False)
         await watcher.start()
-        print("Util ready!")
 
 
     @commands.Cog.listener()
