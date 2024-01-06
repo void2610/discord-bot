@@ -30,39 +30,39 @@ class music_cog(commands.Cog):
             discord.opus.load_opus(os.environ["OPUS_PATH"])
         print("music_cog is ready.")
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def join(self, ctx):
         await join_to_authors_channel(ctx)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def leave(self, ctx):
         self.now_playing = None
         self.queue = []
         await leave_from_voice_channel(ctx)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def next(self, ctx):
         self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def stop(self, ctx):
         await stop_playing_track(ctx)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def resume(self, ctx):
         await resume_playing_track(ctx)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def pause(self, ctx):
         await pause_playing_track(ctx)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def now(self, ctx):
         if self.now_playing is None:
             await ctx.respond(embed=oops_embed("Now playing is None!"))
@@ -72,13 +72,13 @@ class music_cog(commands.Cog):
         await ctx.respond(embed=ec.embed)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def queue(self, ctx):
         e = queue_embed(self.queue, self.now_playing)
         await ctx.respond(embed=e)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def play(self, ctx, url: str):
         await ctx.response.defer()
         if ctx.voice_client is None:
@@ -93,7 +93,7 @@ class music_cog(commands.Cog):
             self.now_playing = await play_next_track(ctx, self.bot, queue=self.queue, now_playing=self.now_playing)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def add(self, ctx, url: str):
         await ctx.response.defer()
 

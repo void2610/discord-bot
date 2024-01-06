@@ -33,7 +33,7 @@ class util_cog(commands.Cog):
             await message.channel.send("https://vxtwitter.com/" + query)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def hello(self, ctx, *, member: discord.Member = None):
         """Says hello"""
         member = member or ctx.author
@@ -45,7 +45,7 @@ class util_cog(commands.Cog):
         self._last_member = member
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def test(self, ctx):
         if ctx.voice_client is None:
             await join_to_authors_channel(ctx)
@@ -56,12 +56,12 @@ class util_cog(commands.Cog):
         await ctx.respond("Playing test music file!")
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def akeome(self, ctx, num: int):
         for i in range(num):
             await ctx.respond("あけおめ ( 'ω')")
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def budo(self, ctx):
         if ctx.voice_client is None:
             await join_to_authors_channel(ctx)
@@ -72,7 +72,7 @@ class util_cog(commands.Cog):
         ctx.voice_client.play(source)
 
 
-    @commands.slash_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids)
     async def meigen(self, ctx, index: int = -1, loop: int = 1):
         for i in range(loop):
             if index > 0:
