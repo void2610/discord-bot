@@ -78,9 +78,9 @@ class util_cog(commands.Cog):
     @commands.slash_command(guild_ids=gids)
     async def meigen(self, ctx, index: int = -1, loop: int = 1):
         for i in range(loop):
-            if num > 0:
+            if index > 0:
                 try:
-                    await ctx.respond(meigen[num - 1])
+                    await ctx.respond(meigen[index - 1])
                 except IndexError:
                     await ctx.respond("ぶどう先生の次回作にご期待ください🍇")
             else:
