@@ -1,7 +1,8 @@
 import os
 
 import discord
-from discord.ext import commands
+from discord import commands
+from discord.ext import commands as extcommands
 from dotenv import load_dotenv
 
 from classes.track import track
@@ -18,13 +19,13 @@ from embeds.queue import queued_tracks_embed, queue_embed
 load_dotenv()
 gids = os.environ["GUILD_ID"].split(',')
 
-class music_cog(commands.Cog):
+class music_cog(extcommands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.now_playing: track = None
         self.queue: list[track] = []
 
-    @commands.Cog.listener()
+    @extcommands.Cog.listener()
     async def on_ready(self):
         if not discord.opus.is_loaded():
             discord.opus.load_opus(os.environ["OPUS_PATH"])

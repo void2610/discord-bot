@@ -12,7 +12,6 @@ gids = os.environ["GUILD_ID"].split(',')
 class test_cog(extcommands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self._last_member = None
 
 
     @extcommands.Cog.listener()

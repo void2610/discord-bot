@@ -2,7 +2,8 @@ import random
 import os
 
 import discord
-from discord.ext import commands
+from discord import commands
+from discord.ext import commands as extcommands
 from dotenv import load_dotenv
 
 from functions.join import join_to_authors_channel
@@ -12,17 +13,17 @@ from resource.meigen import meigen
 load_dotenv()
 gids = os.environ["GUILD_ID"].split(',')
 
-class util_cog(commands.Cog):
+class util_cog(extcommands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
 
 
-    @commands.Cog.listener()
+    @extcommands.Cog.listener()
     async def on_ready(self):
         print("util_cog is ready.")
 
-    @commands.Cog.listener()
+    @extcommands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.author.bot:
             return
