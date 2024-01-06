@@ -47,7 +47,7 @@ class util_cog(extcommands.Cog):
 
 
     @commands.application_command(guild_ids=gids)
-    async def test(self, ctx):
+    async def sound_test(self, ctx):
         if ctx.voice_client is None:
             await join_to_authors_channel(ctx)
         vc = ctx.voice_client
