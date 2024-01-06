@@ -4,6 +4,9 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 
+from cogs.music import music_cog
+from cogs.util import util_cog
+
 
 class MyBot(commands.Bot):
     def __init__(self):
@@ -28,7 +31,7 @@ for filename in os.listdir("tmp/music"):
 
 bot = MyBot()
 
-bot.load_extension("cogs.music")
-bot.load_extension("cogs.util")
+bot.add_cog(util_cog(bot))
+bot.add_cog(music_cog(bot))
 
 bot.run(os.environ["TOKEN"] or "")

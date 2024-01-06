@@ -3,7 +3,6 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
-from cogwatch import Watcher
 
 from classes.track import track
 from classes.embed_view import embed_view
@@ -29,9 +28,7 @@ class music_cog(commands.Cog):
     async def on_ready(self):
         if not discord.opus.is_loaded():
             discord.opus.load_opus(os.environ["OPUS_PATH"])
-
-        watcher = Watcher(self.bot, path='cogs/music.py', preload=True, debug=False)
-        await watcher.start()
+        print("music_cog is ready.")
 
     @commands.slash_command(guild_ids=gids)
     async def join(self, ctx):
