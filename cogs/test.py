@@ -16,7 +16,7 @@ class test_cog(extcommands.Cog):
 
     @extcommands.Cog.listener()
     async def on_ready(self):
-        print('test_cog ready')
+        print('test_cog is ready.')
 
     @commands.application_command(guild_ids=gids)
     async def test(self, ctx):
