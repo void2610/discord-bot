@@ -1,3 +1,8 @@
-ビルド用コマンド
+Build
 
-`docker build --platform linux/arm64 -t bot-test:latest . && docker run -it void2610/discord-bot`
+`docker build --platform linux/amd64 -t void2610/discord-bot:latest . && docker run -it void2610/discord-bot:latest`
+
+
+Push
+
+`docker push void2610/discord-bot:latest`
