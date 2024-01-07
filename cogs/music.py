@@ -31,39 +31,39 @@ class music_cog(extcommands.Cog):
             discord.opus.load_opus(os.environ["OPUS_PATH"])
         print("music_cog is ready.")
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="ボイスチャンネルに参加します")
     async def join(self, ctx):
         await join_to_authors_channel(ctx)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="ボイスチャンネルから退出します")
     async def leave(self, ctx):
         self.now_playing = None
         self.queue = []
         await leave_from_voice_channel(ctx)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="次の曲を再生します")
     async def next(self, ctx):
         self.now_playing = await play_next_track(ctx, self.bot, queue=self.queue, now_playing=self.now_playing)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="再生を停止します")
     async def stop(self, ctx):
         await stop_playing_track(ctx)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="再生を再開します")
     async def resume(self, ctx):
         await resume_playing_track(ctx)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="再生を一時停止します")
     async def pause(self, ctx):
         await pause_playing_track(ctx)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="現在再生中の曲を表示します")
     async def now(self, ctx):
         if self.now_playing is None:
             await ctx.respond(embed=oops_embed("Now playing is None!"))
@@ -73,14 +73,14 @@ class music_cog(extcommands.Cog):
         await ctx.respond(embed=ec.embed)
 
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="キューを表示します")
     async def queue(self, ctx):
         e = queue_embed(self.queue, self.now_playing)
         await ctx.respond(embed=e)
 
 
-    @commands.application_command(guild_ids=gids)
-    async def play(self, ctx, url: str):
+    @commands.application_command(guild_ids=gids, description="指定したURLの曲を再生します")
+    async def play(self, ctx, url: discord.Option(str, "再生する曲のURL")):
         if not ctx.response.is_done():
             await ctx.response.defer()
         if ctx.voice_client is None:
@@ -95,8 +95,8 @@ class music_cog(extcommands.Cog):
             self.now_playing = await play_next_track(ctx, self.bot, queue=self.queue, now_playing=self.now_playing)
 
 
-    @commands.application_command(guild_ids=gids)
-    async def add(self, ctx, url: str):
+    @commands.application_command(guild_ids=gids, description="指定したURLの曲をキューに追加します")
+    async def add(self, ctx, url: discord.Option(str, "追加する曲のURL")):
         await ctx.response.defer()
 
         new_track = await get_track_from_youtube(url)
@@ -104,8 +104,8 @@ class music_cog(extcommands.Cog):
         await ctx.respond(embed=queued_tracks_embed(new_track))
 
 
-    @commands.application_command(guild_ids=gids)
-    async def search(self, ctx, query: str):
+    @commands.application_command(guild_ids=gids, description="動画タイトルから曲を検索して再生します")
+    async def search(self, ctx, query: discord.Option(str, "検索する曲のタイトル")):
         await ctx.response.defer()
 
         id = await search_track_id_from_title(query)

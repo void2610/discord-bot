@@ -14,8 +14,11 @@ def send_vx_twitter(message: discord.Message):
     description = message.content.split(domain)[0]
     if description == "\n":
         description = ""
+
+    if len(message.content.split(domain)) == 1:
+        return None
     query = message.content.split(domain)[1]
 
 
-    result = f"{author}\n{description}https://vxtwitter.com/{query}"
+    result = f"**{author}**\n{description}https://vxtwitter.com/{query}"
     return result

@@ -18,7 +18,7 @@ class test_cog(extcommands.Cog):
     async def on_ready(self):
         print('test_cog is ready.')
 
-    @commands.application_command(guild_ids=gids)
+    @commands.application_command(guild_ids=gids, description="テスト用のコマンドです")
     async def test(self, ctx):
         await ctx.respond("test")
 
