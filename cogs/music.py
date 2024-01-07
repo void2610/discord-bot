@@ -9,7 +9,7 @@ from classes.track import track
 from classes.embed_view import embed_view
 from functions.join import join_to_authors_channel
 from functions.leave import leave_from_voice_channel
-from functions.music.youtube import get_track_from_youtube
+from functions.music.youtube import get_track_from_youtube, search_track_id_from_title
 from functions.music.play import play_next_track, stop_playing_track, resume_playing_track, pause_playing_track
 from embeds.track import track_embed
 from embeds.utils import oops_embed
@@ -45,7 +45,7 @@ class music_cog(extcommands.Cog):
 
     @commands.application_command(guild_ids=gids)
     async def next(self, ctx):
-        self.now_playing = await play_next_track(ctx, queue=self.queue, now_playing=self.now_playing)
+        self.now_playing = await play_next_track(ctx, self.bot, queue=self.queue, now_playing=self.now_playing)
 
 
     @commands.application_command(guild_ids=gids)
@@ -81,13 +81,14 @@ class music_cog(extcommands.Cog):
 
     @commands.application_command(guild_ids=gids)
     async def play(self, ctx, url: str):
-        await ctx.response.defer()
+        if not ctx.response.is_done():
+            await ctx.response.defer()
         if ctx.voice_client is None:
             await join_to_authors_channel(ctx)
 
         new_track = await get_track_from_youtube(url)
         self.queue.append(new_track)
-        if len(self.queue) != 1:
+        if len(self.queue) != 1 or ctx.voice_client.is_playing():
             await ctx.respond(embed=queued_tracks_embed(new_track))
 
         if not ctx.voice_client.is_playing():
@@ -101,6 +102,19 @@ class music_cog(extcommands.Cog):
         new_track = await get_track_from_youtube(url)
         self.queue.append(new_track)
         await ctx.respond(embed=queued_tracks_embed(new_track))
+
+
+    @commands.application_command(guild_ids=gids)
+    async def search(self, ctx, query: str):
+        await ctx.response.defer()
+
+        id = await search_track_id_from_title(query)
+        if id is None:
+            await ctx.respond(embed=oops_embed("No tracks found!"))
+            return
+
+        url = f"https://www.youtube.com/watch?v={id}"
+        await self.play(ctx, url)
 
 
 def setup(bot):
