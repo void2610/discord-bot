@@ -1,4 +1,4 @@
-from embeds.utils import oops_embed
+from embeds.utils import oops_embed, success_embed
 
 async def leave_from_voice_channel(ctx):
     if ctx.voice_client is None:
@@ -6,4 +6,4 @@ async def leave_from_voice_channel(ctx):
         return
     ctx.voice_client.stop()
     await ctx.voice_client.disconnect()
-    await ctx.respond("Left voice channel.")
+    await ctx.respond(embed=success_embed("Left voice channel!"))

@@ -7,6 +7,7 @@ from discord.ext import commands as extcommands
 from dotenv import load_dotenv
 
 from functions.join import join_to_authors_channel
+from functions.utils.twitter import send_vx_twitter
 from resource.meigen import meigen
 
 
@@ -29,9 +30,9 @@ class util_cog(extcommands.Cog):
             return
 
         if "twitter.com" in message.content or "x.com" in message.content:
-            await message.add_reaction("🐦")
-            query = message.content.split(".com/")[-1]
-            await message.channel.send("https://vxtwitter.com/" + query)
+            res = send_vx_twitter(message)
+            await message.channel.send(res)
+            await message.delete()
 
 
     @commands.application_command(guild_ids=gids)
