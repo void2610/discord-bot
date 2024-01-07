@@ -117,5 +117,10 @@ class music_cog(extcommands.Cog):
         await self.play(ctx, url)
 
 
+    @commands.message_command(name="search from message", description="メッセージ内容から曲を検索して再生します")
+    async def search_from_message(self, ctx, message: discord.Message):
+        await self.search(ctx, message.content)
+
+
 def setup(bot):
     bot.add_cog(music_cog(bot))

@@ -75,5 +75,10 @@ class util_cog(extcommands.Cog):
                 await ctx.respond(random.choice(meigen))
 
 
+    @commands.user_command(guild_ids=gids, description="ユーザーのアカウント作成日を表示します")
+    async def account_creation_date(self, ctx, member: discord.Member):
+        await ctx.respond(f"{member.nick}が生まれ落ちたのは{member.created_at}だよ ( 'ω')")
+
+
 def setup(bot):
     bot.add_cog(util_cog(bot))
