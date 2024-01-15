@@ -65,7 +65,7 @@ class util_cog(extcommands.Cog):
 
     @commands.application_command(guild_ids=gids, description="ぶどう先生から名言を賜ります🍇")
     async def meigen(self, ctx, index: discord.Option(int, "名言の番号") = -1, loop: discord.Option(int, "ループ回数") = 1):
-        for i in range(loop):
+        if loop == 1:
             if index > 0:
                 try:
                     await ctx.respond(meigen[index - 1])
@@ -73,6 +73,16 @@ class util_cog(extcommands.Cog):
                     await ctx.respond("ぶどう先生の次回作にご期待ください🍇")
             else:
                 await ctx.respond(random.choice(meigen))
+        else:
+            await ctx.respond("🍇")
+            for i in range(loop):
+                if index > 0:
+                    try:
+                        await ctx.send(meigen[index - 1])
+                    except IndexError:
+                        await ctx.send("ぶどう先生の次回作にご期待ください🍇")
+                else:
+                    await ctx.send(random.choice(meigen))
 
 
     @commands.user_command(guild_ids=gids, description="ユーザーのアカウント作成日を表示します")
