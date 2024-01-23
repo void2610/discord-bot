@@ -5,6 +5,7 @@ import discord
 from discord import commands
 from discord.ext import commands as extcommands
 from dotenv import load_dotenv
+from openstack import connection
 
 from functions.join import join_to_authors_channel
 from functions.utils.twitter import send_vx_twitter
@@ -13,6 +14,13 @@ from resource.meigen import meigen
 
 load_dotenv()
 gids = os.environ["GUILD_ID"].split(',')
+
+auth = {
+    'auth_url': os.environ.get('OS_AUTH_URL'),
+    'project_name': os.environ.get('OS_TENANT_NAME'),
+    'username': os.environ.get('OS_USERNAME'),
+    'password': os.environ.get('OS_PASSWORD'),
+}
 
 class util_cog(extcommands.Cog):
     def __init__(self, bot):
@@ -88,6 +96,57 @@ class util_cog(extcommands.Cog):
     @commands.user_command(guild_ids=gids, description="ユーザーのアカウント作成日を表示します")
     async def account_creation_date(self, ctx, member: discord.Member):
         await ctx.respond(f"{member.nick}が生まれ落ちたのは{member.created_at}だよ ( 'ω')")
+
+
+    @commands.application_command(guild_ids=gids, description="VPSサーバーのステータスを表示します")
+    async def vps_status(self, ctx):
+        # OpenStackに接続
+        conn = connection.Connection(**auth)
+
+        # サーバーのステータスを取得
+        server_id = 'vm-3dc818db-b0'
+        server = conn.compute.find_server(server_id)
+
+        if server:
+            await ctx.respond(f"{server_id} のステータス: **{server.status}**")
+        else:
+            await ctx.respond(f"{server_id} が見つかりません")
+
+
+    @commands.application_command(guild_ids=gids, description="VPSサーバーを起動します")
+    async def start_vps(self, ctx):
+        # OpenStackに接続
+        conn = connection.Connection(**auth)
+
+        # サーバーを起動
+        server_id = 'vm-3dc818db-b0'
+        server = conn.compute.find_server(server_id)
+        conn.compute.start_server(server)
+        await ctx.respond(f"Starting server {server_id}...")
+
+
+    @commands.application_command(guild_ids=gids, description="VPSサーバーを再起動します")
+    async def reboot_vps(self, ctx):
+        # OpenStackに接続
+        conn = connection.Connection(**auth)
+
+        # サーバーを再起動
+        server_id = 'vm-3dc818db-b0'
+        server = conn.compute.find_server(server_id)
+        conn.compute.reboot_server(server)
+        await ctx.respond(f"Rebooting server {server_id}...")
+
+
+    @commands.application_command(guild_ids=gids, description="VPSサーバーを停止します")
+    async def stop_vps(self, ctx):
+        # OpenStackに接続
+        conn = connection.Connection(**auth)
+
+        # サーバーを停止
+        server_id = 'vm-3dc818db-b0'
+        server = conn.compute.find_server(server_id)
+        conn.compute.stop_server(server)
+        await ctx.respond(f"Stopping server {server_id}...")
 
 
 def setup(bot):
