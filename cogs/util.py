@@ -16,10 +16,10 @@ load_dotenv()
 gids = os.environ["GUILD_ID"].split(',')
 
 auth = {
-    'auth_url': os.environ.get('OS_AUTH_URL'),
-    'project_name': os.environ.get('OS_TENANT_NAME'),
-    'username': os.environ.get('OS_USERNAME'),
-    'password': os.environ.get('OS_PASSWORD'),
+    'auth_url': os.environ["OS_AUTH_URL"],
+    'project_name': os.environ["OS_TENANT_NAME"],
+    'username': os.environ["OS_USERNAME"],
+    'password': os.environ["OS_PASSWORD"],
 }
 
 class util_cog(extcommands.Cog):
