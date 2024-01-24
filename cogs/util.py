@@ -100,6 +100,7 @@ class util_cog(extcommands.Cog):
 
     @commands.application_command(guild_ids=gids, description="VPSサーバーのステータスを表示します")
     async def vps_status(self, ctx):
+        await ctx.response.defer()
         # OpenStackに接続
         conn = connection.Connection(**auth)
 
@@ -115,6 +116,7 @@ class util_cog(extcommands.Cog):
 
     @commands.application_command(guild_ids=gids, description="VPSサーバーを起動します")
     async def start_vps(self, ctx):
+        await ctx.response.defer()
         # OpenStackに接続
         conn = connection.Connection(**auth)
 
@@ -127,18 +129,24 @@ class util_cog(extcommands.Cog):
 
     @commands.application_command(guild_ids=gids, description="VPSサーバーを再起動します")
     async def reboot_vps(self, ctx):
+        await ctx.response.defer()
         # OpenStackに接続
         conn = connection.Connection(**auth)
 
         # サーバーを再起動
         server_id = 'vm-3dc818db-b0'
         server = conn.compute.find_server(server_id)
-        conn.compute.reboot_server(server)
-        await ctx.respond(f"Rebooting server {server_id}...")
+        if server:
+            reboot_type = 'SOFT'
+            conn.compute.reboot_server(server, reboot_type)
+            await ctx.respond(f"Rebooting server {server_id}...")
+        else:
+            await ctx.respond(f"{server_id} が見つかりません")
 
 
     @commands.application_command(guild_ids=gids, description="VPSサーバーを停止します")
     async def stop_vps(self, ctx):
+        await ctx.response.defer()
         # OpenStackに接続
         conn = connection.Connection(**auth)
 
