@@ -11,13 +11,10 @@ from cogs.test import test_cog
 
 class MyBot(commands.Bot):
     def __init__(self):
-        super().__init__(
-            command_prefix="!",
-            intents=discord.Intents.all()
-        )
+        super().__init__(command_prefix="!", intents=discord.Intents.all())
 
     async def setup_hook(self) -> None:
-        guild_ids = os.environ["GUILD_ID"].split(',')
+        guild_ids = os.environ["GUILD_ID"].split(",")
         await self.tree.sync(guild=None)
         for g in guild_ids:
             try:
@@ -27,8 +24,13 @@ class MyBot(commands.Bot):
 
 
 load_dotenv()
-for filename in os.listdir("tmp/music"):
-    os.remove(f"tmp/music/{filename}")
+
+directory = "tmp/music"
+if os.path.exists(directory):
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
 
 bot = MyBot()
 
