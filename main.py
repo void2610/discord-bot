@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from cogs.music import music_cog
 from cogs.util import util_cog
 from cogs.test import test_cog
+from auto_access import start_schedule_access
 
 
 class MyBot(commands.Bot):
@@ -38,4 +39,5 @@ bot.add_cog(util_cog(bot))
 bot.add_cog(music_cog(bot))
 bot.add_cog(test_cog(bot))
 
+bot.loop.create_task(start_schedule_access())
 bot.run(os.environ["TOKEN"] or "")
